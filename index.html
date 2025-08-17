@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WildGuard AI - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a1a2a 0%, #1a2a3a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            margin: 1rem auto;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 255, 136, 0.1), rgba(0, 204, 255, 0.1));
+            z-index: -1;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .subtitle {
+            color: #cccccc;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .version {
+            color: #00ccff;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cccccc;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .role-option {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .role-option:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+
+        .role-option.selected {
+            background: #00ff88;
+            color: #000;
+            border-color: #00ff88;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alternative-login {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .divider span {
+            margin: 0 1rem;
+            color: #cccccc;
+            font-size: 0.9rem;
+        }
+
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .quick-btn {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .quick-btn:hover {
+            background: rgba(0, 204, 255, 0.2);
+            border-color: #00ccff;
+            transform: translateY(-2px);
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #00ff88;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 1rem;
+        }
+
+        .forgot-password a {
+            color: #00ccff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #00ff88;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #00ff88;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.2);
+            border: 1px solid #ff4444;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #ff4444;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #00ff88;
+            text-align: center;
+            display: none;
+        }
+
+        .organization-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .org-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .org-option {
+            padding: 0.75rem 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .org-option:hover {
+            background: rgba(0, 204, 255, 0.2);
+            border-color: #00ccff;
+        }
+
+        .org-option.selected {
+            background: #00ccff;
+            color: #000;
+            border-color: #00ccff;
+        }
+
+        .offline-mode {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid #ffaa00;
+            border-radius: 8px;
+        }
+
+        .offline-mode h4 {
+            color: #ffaa00;
+            margin-bottom: 0.5rem;
+        }
+
+        .biometric-login {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .biometric-btn {
+            background: rgba(0, 204, 255, 0.2);
+            border: 1px solid #00ccff;
+            border-radius: 10px;
+            padding: 1rem;
+            color: #00ccff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .biometric-btn:hover {
+            background: rgba(0, 204, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                align-items: flex-start;
+                padding: 0.5rem;
+            }
+            
+            .login-container {
+                margin: 0.5rem auto;
+                padding: 1.5rem;
+                max-height: 95vh;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .logo-section {
+                margin-bottom: 1.5rem;
+            }
+            
+            .role-selector,
+            .quick-access {
+                grid-template-columns: 1fr;
+            }
+            
+            .org-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-height: 800px) {
+            body {
+                align-items: flex-start;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+            
+            .login-container {
+                margin: 0 auto;
+                max-height: 95vh;
+            }
+            
+            .logo-section {
+                margin-bottom: 1rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-section">
+            <div class="logo">🌿 WildGuard AI</div>
+            <div class="subtitle">Enhanced Wildlife Conservation System</div>
+            <div class="version">Version 2.0 - Multi-User Enterprise</div>
+        </div>
+
+        <!-- Error/Success Messages -->
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <!-- Loading Indicator -->
+        <div class="loading" id="loadingIndicator">
+            <div class="spinner"></div>
+            <div>Authenticating...</div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+            <!-- Organization Selector -->
+            <div class="organization-selector">
+                <label>Select Organization</label>
+                <div class="org-grid">
+                    <div class="org-option" data-org="wwf">🐼 WWF</div>
+                    <div class="org-option" data-org="kws">🦁 KWS</div>
+                    <div class="org-option" data-org="awf">🐘 AWF</div>
+                    <div class="org-option" data-org="parks">🌳 Parks</div>
+                    <div class="org-option" data-org="research">🔬 Research</div>
+                    <div class="org-option" data-org="custom">⚙️ Custom</div>
+                </div>
+            </div>
+
+            <!-- Username Field -->
+            <div class="form-group">
+                <label for="username">Username / Employee ID</label>
+                <input type="text" id="username" class="form-input" placeholder="Enter your username" required>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+            </div>
+
+            <!-- Role Selector -->
+            <div class="form-group">
+                <label>Access Level</label>
+                <div class="role-selector">
+                    <div class="role-option" data-role="ranger">🛡️ Field Ranger</div>
+                    <div class="role-option" data-role="researcher">🔬 Researcher</div>
+                    <div class="role-option" data-role="admin">👑 Administrator</div>
+                    <div class="role-option" data-role="pilot">🚁 Drone Pilot</div>
+                </div>
+            </div>
+
+            <!-- Remember Me -->
+            <div class="remember-me">
+                <input type="checkbox" id="rememberMe" class="checkbox">
+                <label for="rememberMe">Remember me on this device</label>
+            </div>
+
+            <!-- Forgot Password -->
+            <div class="forgot-password">
+                <a href="#" id="forgotPassword">Forgot password?</a>
+            </div>
+
+            <!-- LOGIN BUTTON - MAIN ONE -->
+            <button type="submit" class="login-btn" id="loginBtn">
+                🔐 Secure Login
+            </button>
+        </form>
+
+        <!-- Alternative Login Methods -->
+        <div class="divider">
+            <span>or</span>
+        </div>
+
+        <!-- Biometric Login -->
+        <div class="biometric-login">
+            <button type="button" class="biometric-btn" id="biometricLogin">
+                👆 Fingerprint / Face ID Login
+            </button>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="alternative-login">
+            <div class="quick-access">
+                <button class="quick-btn" id="guestAccess">👁️ Demo Mode</button>
+                <button class="quick-btn" id="offlineMode">📱 Offline Access</button>
+                <button class="quick-btn" id="emergencyAccess">🚨 Emergency</button>
+            </div>
+        </div>
+
+        <!-- Offline Mode Panel -->
+        <div class="offline-mode" id="offlineModePanel" style="display: none;">
+            <h4>🔄 Offline Mode</h4>
+            <p>Continue with cached credentials</p>
+            <button class="login-btn" style="margin-top: 1rem;" id="continueOffline">Continue Offline</button>
+        </div>
+
+        <!-- Security Badge -->
+        <div class="security-badge">
+            🔒 Secured with 256-bit encryption
+        </div>
+    </div>
+
+    <script>
+        // User authentication system
+        class WildGuardAuth {
+            constructor() {
+                this.currentUser = null;
+                this.selectedOrg = null;
+                this.selectedRole = null;
+                this.isOnline = navigator.onLine;
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.checkStoredCredentials();
+                this.checkOnlineStatus();
+            }
+
+            bindEvents() {
+                // Organization selection
+                document.querySelectorAll('.org-option').forEach(option => {
+                    option.addEventListener('click', (e) => this.selectOrganization(e.target.dataset.org));
+                });
+
+                // Role selection
+                document.querySelectorAll('.role-option').forEach(option => {
+                    option.addEventListener('click', (e) => this.selectRole(e.target.dataset.role));
+                });
+
+                // Form submission
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                // Alternative login methods
+                document.getElementById('guestAccess').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleGuestLogin();
+                });
+
+                document.getElementById('offlineMode').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showOfflineMode();
+                });
+
+                document.getElementById('emergencyAccess').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleEmergencyAccess();
+                });
+
+                document.getElementById('biometricLogin').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleBiometricLogin();
+                });
+
+                document.getElementById('continueOffline').addEventListener('click', (e) => {
+                    this.handleOfflineLogin();
+                });
+
+                document.getElementById('forgotPassword').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleForgotPassword();
+                });
+
+                // Online/offline detection
+                window.addEventListener('online', () => this.handleOnlineStatusChange(true));
+                window.addEventListener('offline', () => this.handleOnlineStatusChange(false));
+            }
+
+            selectOrganization(org) {
+                document.querySelectorAll('.org-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                document.querySelector(`[data-org="${org}"]`).classList.add('selected');
+                this.selectedOrg = org;
+            }
+
+            selectRole(role) {
+                document.querySelectorAll('.role-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                document.querySelector(`[data-role="${role}"]`).classList.add('selected');
+                this.selectedRole = role;
+            }
+
+            async handleLogin() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('rememberMe').checked;
+
+                if (!this.selectedOrg || !this.selectedRole) {
+                    this.showError('Please select organization and access level');
+                    return;
+                }
+
+                if (!username || !password) {
+                    this.showError('Please enter username and password');
+                    return;
+                }
+
+                this.showLoading(true);
+
+                try {
+                    const result = await this.authenticate(username, password, this.selectedOrg, this.selectedRole);
+                    
+                    if (result.success) {
+                        this.currentUser = result.user;
+                        
+                        if (rememberMe) {
+                            this.storeCredentials(username, this.selectedOrg, this.selectedRole);
+                        }
+
+                        this.showSuccess(`Welcome back, ${result.user.name}!`);
+                        
+                        setTimeout(() => {
+                            this.redirectToMainApp();
+                        }, 2000);
+                    } else {
+                        this.showError(result.message || 'Authentication failed');
+                    }
+                } catch (error) {
+                    this.showError('Connection error. Please try offline mode.');
+                    this.showOfflineMode();
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            async authenticate(username, password, organization, role) {
+                // Simulate different authentication scenarios
+                const users = {
+                    // Demo accounts
+                    'demo': { 
+                        password: 'demo', 
+                        name: 'Demo User', 
+                        role: 'ranger', 
+                        org: 'any',
+                        permissions: ['view', 'basic_control']
+                    },
+                    'admin': { 
+                        password: 'admin123', 
+                        name: 'Administrator', 
+                        role: 'admin', 
+                        org: 'any',
+                        permissions: ['full_access', 'user_management', 'system_config']
+                    },
+                    'ranger01': { 
+                        password: 'ranger123', 
+                        name: 'Field Ranger Smith', 
+                        role: 'ranger', 
+                        org: 'kws',
+                        permissions: ['field_ops', 'emergency_response', 'evidence_collection']
+                    },
+                    'pilot01': { 
+                        password: 'pilot123', 
+                        name: 'Drone Pilot Johnson', 
+                        role: 'pilot', 
+                        org: 'any',
+                        permissions: ['drone_control', 'flight_planning', 'video_capture']
+                    },
+                    'researcher01': { 
+                        password: 'research123', 
+                        name: 'Dr. Wildlife Expert', 
+                        role: 'researcher', 
+                        org: 'research',
+                        permissions: ['data_analysis', 'species_id', 'reporting']
+                    }
+                };
+
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                const user = users[username.toLowerCase()];
+                
+                if (!user) {
+                    return { success: false, message: 'User not found' };
+                }
+
+                if (user.password !== password) {
+                    return { success: false, message: 'Invalid password' };
+                }
+
+                if (user.org !== 'any' && user.org !== organization) {
+                    return { success: false, message: 'Invalid organization for this user' };
+                }
+
+                if (user.role !== role) {
+                    return { success: false, message: 'Invalid access level for this user' };
+                }
+
+                return {
+                    success: true,
+                    user: {
+                        username: username,
+                        name: user.name,
+                        role: role,
+                        organization: organization,
+                        permissions: user.permissions,
+                        loginTime: new Date().toISOString(),
+                        sessionId: this.generateSessionId()
+                    }
+                };
+            }
+
+            handleGuestLogin() {
+                this.showLoading(true);
+                this.currentUser = {
+                    username: 'guest',
+                    name: 'Guest User',
+                    role: 'demo',
+                    organization: 'demo',
+                    permissions: ['view_only'],
+                    loginTime: new Date().toISOString(),
+                    sessionId: this.generateSessionId()
+                };
+
+                setTimeout(() => {
+                    this.showLoading(false);
+                    this.showSuccess('Logged in as Guest - View-only access');
+                    setTimeout(() => this.redirectToMainApp(), 2000);
+                }, 1000);
+            }
+
+            handleEmergencyAccess() {
+                const emergencyCode = prompt('Enter emergency access code:');
+                
+                if (emergencyCode === 'WILDLIFE911' || emergencyCode === 'EMERGENCY') {
+                    this.currentUser = {
+                        username: 'emergency',
+                        name: 'Emergency User',
+                        role: 'emergency',
+                        organization: 'emergency',
+                        permissions: ['emergency_ops', 'full_access'],
+                        loginTime: new Date().toISOString(),
+                        sessionId: this.generateSessionId()
+                    };
+
+                    this.showSuccess('Emergency access granted');
+                    setTimeout(() => this.redirectToMainApp(), 1500);
+                } else {
+                    this.showError('Invalid emergency code');
+                }
+            }
+
+            async handleBiometricLogin() {
+                try {
+                    this.showLoading(true);
+                    
+                    // Simulate biometric authentication
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    const storedUser = this.getStoredCredentials();
+                    if (storedUser) {
+                        this.currentUser = storedUser;
+                        this.showSuccess('Biometric authentication successful');
+                        setTimeout(() => this.redirectToMainApp(), 2000);
+                    } else {
+                        this.showError('No stored biometric credentials found');
+                    }
+                } catch (error) {
+                    this.showError('Biometric authentication failed');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            showOfflineMode() {
+                document.getElementById('offlineModePanel').style.display = 'block';
+            }
+
+            handleOfflineLogin() {
+                const storedUser = this.getStoredCredentials();
+                if (storedUser) {
+                    this.currentUser = storedUser;
+                    this.currentUser.offlineMode = true;
+                    this.showSuccess('Continuing in offline mode');
+                    setTimeout(() => this.redirectToMainApp(), 2000);
+                } else {
+                    this.showError('No cached credentials available for offline access');
+                }
+            }
+
+            handleForgotPassword() {
+                const email = prompt('Enter your email address for password reset:');
+                if (email) {
+                    this.showSuccess('Password reset link sent to your email');
+                }
+            }
+
+            handleOnlineStatusChange(isOnline) {
+                this.isOnline = isOnline;
+                if (isOnline) {
+                    this.showSuccess('Connection restored');
+                    document.getElementById('offlineModePanel').style.display = 'none';
+                } else {
+                    this.showError('Connection lost - Offline mode available');
+                    this.showOfflineMode();
+                }
+            }
+
+            checkStoredCredentials() {
+                const stored = localStorage.getItem('wildguard_user');
+                if (stored) {
+                    try {
+                        const user = JSON.parse(stored);
+                        // Auto-populate form if credentials are stored
+                        document.getElementById('username').value = user.username || '';
+                        if (user.organization) this.selectOrganization(user.organization);
+                        if (user.role) this.selectRole(user.role);
+                        document.getElementById('rememberMe').checked = true;
+                    } catch (error) {
+                        console.error('Error loading stored credentials:', error);
+                    }
+                }
+            }
+
+            storeCredentials(username, organization, role) {
+                const userData = {
+                    username: username,
+                    organization: organization,
+                    role: role,
+                    lastLogin: new Date().toISOString()
+                };
+                localStorage.setItem('wildguard_user', JSON.stringify(userData));
+            }
+
+            getStoredCredentials() {
+                const stored = localStorage.getItem('wildguard_user');
+                if (stored) {
+                    try {
+                        return JSON.parse(stored);
+                    } catch (error) {
+                        return null;
+                    }
+                }
+                return null;
+            }
+
+            generateSessionId() {
+                return 'wg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+
+            checkOnlineStatus() {
+                if (!this.isOnline) {
+                    this.showOfflineMode();
+                }
+            }
+
+            redirectToMainApp() {
+                // Store current user session
+                localStorage.setItem('wildguard_session', JSON.stringify(this.currentUser));
+                
+                // Show loading message
+                document.body.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column; background: linear-gradient(135deg, #0a1a2a 0%, #1a2a3a 100%); color: white;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🌿</div>
+                            <h2 style="color: #00ff88; margin-bottom: 1rem;">Welcome to WildGuard AI</h2>
+                            <p style="color: #cccccc; margin-bottom: 2rem;">Loading your personalized dashboard...</p>
+                            <div style="width: 60px; height: 60px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid #00ff88; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                        </div>
+                    </div>
+                `;
+                
+                // Redirect to main application
+                setTimeout(() => {
+                    window.location.href = 'app.html';
+                }, 2000);
+            }
+
+            showLoading(show) {
+                document.getElementById('loadingIndicator').style.display = show ? 'block' : 'none';
+                document.getElementById('loginBtn').disabled = show;
+            }
+
+            showError(message) {
+                const errorEl = document.getElementById('errorMessage');
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+                
+                setTimeout(() => {
+                    errorEl.style.display = 'none';
+                }, 5000);
+            }
+
+            showSuccess(message) {
+                const successEl = document.getElementById('successMessage');
+                successEl.textContent = message;
+                successEl.style.display = 'block';
+                document.getElementById('errorMessage').style.display = 'none';
+                
+                setTimeout(() => {
+                    successEl.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Initialize authentication system
+        const auth = new WildGuardAuth();
+
+        // Demo credentials info popup
+        setTimeout(() => {
+            if (confirm('🎯 Would you like to see demo login credentials?')) {
+                alert(`🔐 Demo Login Credentials:
+
+📱 QUICK ACCESS:
+• Demo Mode: Click "Demo Mode" button
+• Emergency: Code "WILDLIFE911" or "EMERGENCY"
+• Offline: Click "Offline Access" (if you've logged in before)
+
+👤 FULL LOGIN CREDENTIALS:
+• Username: demo | Password: demo
+• Username: admin | Password: admin123  
+• Username: ranger01 | Password: ranger123
+• Username: pilot01 | Password: pilot123
+• Username: researcher01 | Password: research123
+
+🏢 ORGANIZATIONS:
+• WWF - World Wildlife Fund
+• KWS - Kenya Wildlife Service  
+• AWF - African Wildlife Foundation
+• Parks - National Parks
+• Research - Research Institutions
+• Custom - Custom Organization
+
+🎭 ROLES:
+• Field Ranger - Field operations & patrol
+• Researcher - Data analysis & species study
+• Administrator - Full system access
+• Drone Pilot - Drone operations & flight control
+
+💡 TIP: Select organization and role first, then enter credentials!`);
+            }
+        }, 2000);
+    </script>
+</body>
+</html> 
